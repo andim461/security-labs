@@ -12,6 +12,7 @@ const urls = {
   activateUser: "/activateUser",
   changePassword: "/changePassword",
   toggleRestrictedPassword: "/toggleRestrictedPassword",
+  changeRestricted: "/changeRestricted",
 };
 
 const signIn = (name: string, password: string) =>
@@ -46,6 +47,14 @@ const changePassword = (
     oldPassword,
     newPassword,
   });
+const changeRestricted = (
+  userId: string,
+  newPassword: string
+  ) =>
+  instance.post(urls.changeRestricted, {
+    id: userId,
+    newPassword,
+  });
 
 const toggleRestrictedUser = (id: string) =>
   instance.post(urls.toggleRestrictedPassword, {
@@ -62,4 +71,5 @@ export {
   activateUser,
   changePassword,
   toggleRestrictedUser,
+  changeRestricted
 };

@@ -13,6 +13,8 @@ import Typography from "@mui/material/Typography";
 
 const App = observer((): JSX.Element => {
   const dataStore = useDataStore();
+  console.log(dataStore.currentUser?.isAdmin)
+  
 
   return (
     <Router>
@@ -24,7 +26,7 @@ const App = observer((): JSX.Element => {
           <Route path="/" exact>
             {dataStore.currentUser ? (
               dataStore.currentUser.isActivated &&
-              dataStore.currentUser.isPasswordValid ? (
+              (dataStore.currentUser.isPasswordValid || !dataStore.currentUser.isPasswordRestricted) ? (
                 dataStore.currentUser.isBlocked ? (
                   <Typography variant="h3" color="red" align="center">
                     Вы заблокированы
@@ -45,14 +47,14 @@ const App = observer((): JSX.Element => {
           <Route path="/activateUser">
             {dataStore.currentUser ? (
               dataStore.currentUser.isActivated &&
-              dataStore.currentUser.isPasswordValid ? (
+              (dataStore.currentUser.isPasswordValid || !dataStore.currentUser.isPasswordRestricted) ? (
                 <Redirect to="/" />
               ) : (
                 <ActivateUserPage
                   userId={dataStore.currentUser.id}
                   userName={dataStore.currentUser.name}
                   message={
-                    dataStore.currentUser.isPasswordValid
+                    dataStore.currentUser.isPasswordValid || !dataStore.currentUser.isPasswordRestricted
                       ? undefined
                       : "Ваш текущий пароль не соответствует ограничениям"
                   }

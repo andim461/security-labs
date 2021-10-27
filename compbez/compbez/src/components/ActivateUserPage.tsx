@@ -23,6 +23,27 @@ const ActivateUserPage = observer(
 
     const history = useHistory();
 
+    const onChangeClick = async () =>{
+      if (!(newPassword && newPasswordConfirmation)) {
+        setActivateUserError(
+          "Новый пароль или его подтверждения не должны быть пустыми строками"
+        );
+        return;
+      }
+      if (newPassword !== newPasswordConfirmation) {
+        setActivateUserError("Новый пароль и его подтверждение не совпадают");
+        return;
+      }
+      try {
+        await api.changeRestricted(userId, newPassword);
+        dataStore.signIn(userName, newPassword);
+        history.push("/");
+      } catch (error: any) {
+        if (error?.response?.data) {
+          setActivateUserError(error.response.data as string);
+        }
+      }
+    };
     const onActivateClick = async () => {
       if (!(newPassword && newPasswordConfirmation)) {
         setActivateUserError(
@@ -82,7 +103,7 @@ const ActivateUserPage = observer(
             type="password"
           />
           <Button
-            onClick={onActivateClick}
+            onClick={message ? onChangeClick : onActivateClick}
             type="submit"
             fullWidth
             variant="contained"

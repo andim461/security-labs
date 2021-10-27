@@ -117,7 +117,33 @@ app.post("/activateUser", async (req, res) => {
         res.status(404).send(error.message);
     }
 });
-
+app.post("/changeRestricted", async (req, res) => {
+    try {
+        const {id, newPassword} = req.body;
+        if (!(id && newPassword)) {
+            res.status(404).send("Полученные сервером данные некорректны");
+            return;
+        }
+        const user = await User.findOne({_id: id});
+        if (user) {
+            if (user.password === "") {
+                res.status(404).send("Пользователь не активирован");
+            }
+            
+            if (user.isPasswordRestricted && !isPasswordValid(newPassword)) {
+                res.status(404).send("Пароль не проходит валидацию")
+                return;
+            }
+            await User.updateOne({_id: id}, {password: newPassword});
+            res.status(200).send("OK");
+            
+        } else {
+            res.status(404).send("Пользователя с полученным id не существует");
+        }
+    } catch (error) {
+        res.status(404).send(error.message);
+    }
+});
 app.post("/changePassword", async (req, res) => {
     try {
         const {id, oldPassword, newPassword} = req.body;
