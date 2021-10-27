@@ -11,10 +11,11 @@ import { useHistory } from "react-router-dom";
 interface ActivateUserPageProps {
   userId: string;
   userName: string;
+  message: undefined | string;
 }
 
 const ActivateUserPage = observer(
-  ({ userId, userName }: ActivateUserPageProps) => {
+  ({ userId, userName, message }: ActivateUserPageProps) => {
     const [newPassword, setNewPassword] = useState<string>("");
     const [newPasswordConfirmation, setNewPasswordConfirmation] =
       useState<string>("");
@@ -57,6 +58,7 @@ const ActivateUserPage = observer(
           {activateUserError ? (
             <Typography variant="body1">{activateUserError}</Typography>
           ) : null}
+          {message ? <Typography variant="body1">{message}</Typography> : null}
           <TextField
             value={newPassword}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

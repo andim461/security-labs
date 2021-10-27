@@ -23,7 +23,8 @@ const App = observer((): JSX.Element => {
         <Switch>
           <Route path="/" exact>
             {dataStore.currentUser ? (
-              dataStore.currentUser.isActivated ? (
+              dataStore.currentUser.isActivated &&
+              dataStore.currentUser.isPasswordValid ? (
                 dataStore.currentUser.isBlocked ? (
                   <Typography variant="h3" color="red" align="center">
                     Вы заблокированы
@@ -43,12 +44,18 @@ const App = observer((): JSX.Element => {
           </Route>
           <Route path="/activateUser">
             {dataStore.currentUser ? (
-              dataStore.currentUser.isActivated ? (
+              dataStore.currentUser.isActivated &&
+              dataStore.currentUser.isPasswordValid ? (
                 <Redirect to="/" />
               ) : (
                 <ActivateUserPage
                   userId={dataStore.currentUser.id}
                   userName={dataStore.currentUser.name}
+                  message={
+                    dataStore.currentUser.isPasswordValid
+                      ? undefined
+                      : "Ваш текущий пароль не соответствует ограничениям"
+                  }
                 />
               )
             ) : (
