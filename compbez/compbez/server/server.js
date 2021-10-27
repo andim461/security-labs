@@ -4,8 +4,10 @@ const User = require("./models/User");
 const cors = require("cors");
 
 require("dotenv").config();
+
 const PORT = process.env.PORT || 8080;
 const DB_URI = process.env.DB_URI;
+console.log(DB_URI);
 if (!DB_URI) {
     throw Error("DB_URI is undefined");
 }
@@ -14,6 +16,18 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const createAdmin = async () => {
+
+    const existentUser = await User.exists({name: "ADMIN"});
+    if(!existentUser){
+        await User.create({name: "ADMIN", isAdmin: true});
+        console.log("ADMIN created");
+    }else{
+        console.log("ADMIN exists");
+    }
+    
+
+}
 
 const extractUserData = user => ({
     id: user.id,
@@ -25,13 +39,13 @@ const extractUserData = user => ({
 });
 
 const isPasswordValid = password => {
-    return /(?=.*[0-9])(?=.*[\W])[0-9a-zA-Z\W]/.test(password);
+    return /(?=.*[0-9])(?=.*[+\/*\-])[0-9a-zA-Z\W]/.test(password);
 }
 
 app.post("/signIn", async (req, res) => {
     try {
         if (!req.body.name || typeof req.body.password !== "string") {
-            res.status(404).send("Отсутствует имя или пароль");
+            res.status(404).send("Отсутствует логин и/или пароль");
             return;
         }
         let user = await User.find({
@@ -188,11 +202,12 @@ app.get("/getUsers", async (req, res) => {
 async function start() {
     try {
         await mongoose.connect(
-            "mongodb+srv://maga:wFSLx5Vp5SH7sCap@cluster0.1e9rg.mongodb.net/users?retryWrites=true&w=majority"
+            "mongodb+srv://andim:andim@andimcluster.bu6lx.mongodb.net/users?retryWrites=true&w=majority"
         );
         app.listen(PORT, () => {
             console.log(`Server started on port ${PORT}`);
         });
+        createAdmin();
     } catch (error) {
         console.error(error);
     }
