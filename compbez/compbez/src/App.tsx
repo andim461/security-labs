@@ -11,6 +11,7 @@ import { observer } from 'mobx-react-lite';
 import { useDataStore } from './contexts';
 import Typography from '@mui/material/Typography';
 import './index.css';
+import About from './components/About';
 
 const App = observer((): JSX.Element => {
  const dataStore = useDataStore();
@@ -29,9 +30,18 @@ const App = observer((): JSX.Element => {
         (dataStore.currentUser.isPasswordValid ||
          !dataStore.currentUser.isPasswordRestricted) ? (
          dataStore.currentUser.isBlocked ? (
-          <Typography variant='h3' color='red' align='center'>
-           Вы заблокированы
-          </Typography>
+          <div>
+           <Typography
+            variant='h3'
+            color='white'
+            align='center'
+            sx={{ marginTop: '400px' }}>
+            Вас заблокировал администратор.
+           </Typography>
+           <Typography variant='h4' color='white' align='center'>
+            Для продолжения работы обратитесь к нему.
+           </Typography>
+          </div>
          ) : (
           <MainPage />
          )
@@ -66,6 +76,9 @@ const App = observer((): JSX.Element => {
        ) : (
         <Redirect to='/signIn' />
        )}
+      </Route>
+      <Route path='/about'>
+       <About />
       </Route>
      </Switch>
     </Container>

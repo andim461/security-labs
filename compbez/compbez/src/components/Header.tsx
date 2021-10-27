@@ -11,6 +11,7 @@ import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import './componentsStyles.css';
+import { useHistory } from 'react-router';
 
 const theme = createTheme({
  components: {
@@ -27,7 +28,7 @@ const theme = createTheme({
 const Header = observer(() => {
  const dataStore = useDataStore();
  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
-
+ const history = useHistory();
  const openUserMenu = (event: React.MouseEvent<HTMLElement>) => {
   setMenuAnchorEl(event.currentTarget);
  };
@@ -40,6 +41,15 @@ const Header = observer(() => {
   dataStore.signOut();
   closeUserMenu();
  };
+ const onAboutClick = () => {
+  history.push('/about');
+ };
+ const onSignIn = () => {
+  history.push('/signIn');
+ };
+ const onMain = () => {
+  history.push('');
+ };
 
  return (
   <ThemeProvider theme={theme}>
@@ -49,7 +59,7 @@ const Header = observer(() => {
     }}>
     <AppBar color='secondary'>
      <Toolbar>
-      <Grid container alignItems='center' justifyContent='flex-start'>
+      <Grid container alignItems='center' justifyContent='space-between'>
        <Grid item>
         {dataStore.currentUser ? (
          <>
@@ -68,6 +78,25 @@ const Header = observer(() => {
          </>
         ) : null}
        </Grid>
+
+       {dataStore.currentUser ? (
+        <div>
+         <Button color='primary' variant='outlined' onClick={onMain}>
+          Главная
+         </Button>
+        </div>
+       ) : (
+        <div>
+         <Button color='primary' variant='outlined' onClick={onSignIn}>
+          Войти
+         </Button>
+        </div>
+       )}
+       <div>
+        <Button color='primary' variant='outlined' onClick={onAboutClick}>
+         О приложении
+        </Button>
+       </div>
       </Grid>
      </Toolbar>
     </AppBar>
