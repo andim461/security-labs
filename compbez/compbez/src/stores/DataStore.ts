@@ -8,6 +8,7 @@ type User = {
   isActivated: boolean;
   isBlocked: boolean;
   isPasswordRestricted: boolean;
+  isPasswordValid: boolean;
 };
 
 export class DataStore {

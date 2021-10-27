@@ -59,7 +59,7 @@ app.post("/signIn", async (req, res) => {
                 user = user[0];
                 if (user.password === req.body.password) {
                     const extractedUserData = extractUserData(user);
-                    res.status(200).json(extractedUserData);
+                    res.status(200).json({...extractedUserData, isPasswordValid: isPasswordValid(user.password)});
                 } else {
                     res.status(404).json("Неверный пароль");
                 }
